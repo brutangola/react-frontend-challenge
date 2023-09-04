@@ -11,7 +11,7 @@
 
 - Primeiro, faça um fork deste projeto para sua conta no Github (crie uma se você não possuir).
 - Em seguida, implemente o projeto tal qual descrito abaixo, em seu clone local.
-- Por fim, envie via email um arquivo patch para seu contato na Monarka.
+- Por fim, envie via email um arquivo patch ou o link do repositorio para seu contato na Brut.
 
 ****
 

@@ -1,60 +1,159 @@
 # 🏁 Desafio de programação - Vaga Front-End 🏁
 
-**Este teste tem por objectivos principais avaliar:**
+**Nível:** Intermediário  
+**Entrega:** até 2 dias (≈ 12–16h)  
+**Obrigatório:** **React + TypeScript**, **integração com API**, **deploy público**
 
-- Habilidades no desenvolvimento frontend
-- Conceitos de UI e UX aplicados
+***
 
-****
+## 1) Objetivo
 
-## Instruções
+Construir uma SPA pequena e bem acabada para **descobrir conteúdo via API** e **guardar itens numa coleção local**. O foco é avaliar: organização, tipagem, integração com API, estados de UI e entrega em produção (deploy).
 
-- Primeiro, faça um fork deste projeto para sua conta no Github (crie uma se você não possuir).
-- Em seguida, implemente o projeto tal qual descrito abaixo, em seu clone local.
-- Por fim, envie via email um arquivo patch ou o link do repositorio para seu contato na Brut.
+***
 
-****
+## 2) O que vais construir: **Brut Discover (Mini Curadoria)**
 
-## Desafio 🚀 🚀 🚀
+Uma app com **3 ecrãs**:
 
-![screen](/image.png)
+1.  **Explorar** (pesquisa + lista de resultados via API)
+2.  **Detalhe** (dados completos do item via API + ação “guardar”)
+3.  **Coleções** (gestão local: criar coleção e gerir itens guardados)
 
-O desafio consiste em criar um projeto com o design da imagem **acima**, utilizando a [API do YouTube](https://developers.google.com/youtube/v3)
+***
 
-Utilize a [documentação](https://developers.google.com/youtube/v3/docs) para se orientar em como criar uma conta, signup no app, listar os vídeos do usuário, se inscrever em canais, enviar vídeos, ou o que mais você precisar.
+## 3) API (obrigatória)
 
-O layout da **home** não precisa ser exatamente como o do wireframe. Você pode ficar a vontade para exibir os conteúdos/vídeos que achar melhor, desde que qualquer informação (vídeo, texto, cores, imagens) sejam exibidos de maneira organizada e bem distribuida entre a tela, fornecendo uma boa experiência para o usuário.
+Usa **uma API pública real**. Recomendação por simplicidade (sem chave):
 
-**Antes de iniciar o teste**
-1. Crie um projeto no [console de desenvolvedor](https://console.developers.google.com/projectcreate) da **Google**
-2. Ative a [YouTube Data API v3](https://console.developers.google.com/apis/api/youtube.googleapis.com/overview) nele
-3. Crie uma credencial de acesso para que seu app possa se comunicar com a API
+### Wikipedia (PT)
 
-**Requisitos esperados na entrega do teste**
+*   Pesquisa:  
+    `https://pt.wikipedia.org/w/rest.php/v1/search/title?q=TERMO&limit=20`
+*   Detalhe/Resumo:  
+    `https://pt.wikipedia.org/api/rest_v1/page/summary/TITULO`
 
-- [ ] Fornecer um mecanismo para o usuário poder pesquisar vídeos
-- [ ] Possuir home page que exiba algum conteúdo interessante para uma plataforma de vídeos
-- [ ] Fornecer uma estrutura de gerência do estado da aplicação
-- [ ] Possuir histórico das buscas realizadas (persistir localmente)
+> Podes usar outra API, desde que:
+>
+> *   tenha **pelo menos 2 endpoints** (lista/pesquisa + detalhe),
+> *   e seja consumida com tipagem em TypeScript.
 
-**Requisitos extras** 
+***
 
-- [ ] Permitir cadastro de usuário / login através da API do YouTube + OAuth2
-- [ ] Permitir upload de vídeo para a API do YouTube
+## 4) Requisitos funcionais (mínimo viável para 1 dia)
 
-****
+### 4.1 Explorar (Pesquisa + Resultados)
 
-## Pontos principais
+**Funcionalidades:**
 
-- Clean code
-- Conhecimento de boas práticas / design patterns
-- Demonstração de boa gestão do estado do app
+*   Campo de pesquisa.
+*   Buscar resultados na API e listar itens.
+*   Estados obrigatórios:
+    *   **loading**
+    *   **erro** (com botão “tentar novamente”)
+    *   **vazio** (“sem resultados”)
+*   Clique num item → navegar para **Detalhe**.
 
-****
+**Regras:**
 
-## Pontos extras
-- Uso de frameworks / libs
-- Testes
-- Componetização do app
-- Uso de linters
-****
+*   Implementar **debounce** (300–500ms) para evitar chamadas excessivas.
+*   Implementar **paginação simples**: botão **“Carregar mais”** (ou paginação por páginas).
+
+***
+
+### 4.2 Detalhe (Item completo)
+
+**Funcionalidades:**
+
+*   Ao abrir um item, fazer chamada ao endpoint de detalhe.
+*   Mostrar pelo menos:
+    *   título
+    *   resumo/descrição
+    *   imagem (se existir)
+    *   link para a fonte (abrir em nova aba)
+*   Botão: **“Guardar na coleção”**
+    *   Se não existir coleção ainda, permitir criar uma rapidamente (ex.: modal ou input simples).
+
+***
+
+### 4.3 Coleções (Persistência local)
+
+**Funcionalidades:**
+
+*   Criar coleção (nome obrigatório).
+*   Listar coleções existentes.
+*   Abrir uma coleção e ver os itens guardados.
+*   Remover item da coleção.
+*   **Persistir em `localStorage`** (coleções + itens).
+
+**Modelo mínimo sugerido (podes adaptar):**
+
+*   Coleção: `id`, `nome`, `criadaEm`
+*   Item guardado: `id` (ou `title`), `title`, `url`, `resumoCurto?`, `imagem?`
+
+***
+
+## 5) Requisitos técnicos (obrigatórios)
+
+### TypeScript e Qualidade
+
+*   Projeto **100% TypeScript**.
+*   Tipar respostas da API (DTOs) e mapear para modelos internos quando fizer sentido.
+*   ESLint + Prettier (ou configuração equivalente).
+
+### Arquitetura mínima
+
+*   React Router (ou equivalente) para rotas:
+    *   `/` (Explorar)
+    *   `/item/:id` (Detalhe)
+    *   `/colecoes` (Coleções)
+*   Separar:
+    *   camada de API (ex.: `services/api.ts`)
+    *   UI components
+    *   estado local (coleções)
+
+### Integração com API
+
+*   Usar `fetch` ou `axios`.
+*   Tratamento de:
+    *   timeouts/abort (recomendado, mas opcional)
+    *   erros HTTP e erros de rede
+
+### Testes (mínimo)
+
+*   **Pelo menos 2 testes** (para caber no dia), por exemplo:
+    *   1 teste de componente (render e estados)
+    *   1 teste de fluxo simples (guardar item em coleção)
+*   Ferramentas sugeridas: Vitest + Testing Library.
+
+***
+
+## 6) Deploy (obrigatório)
+
+*   Deploy público em **Vercel**, **Netlify** ou **GitHub Pages**.
+*   A entrega deve incluir:
+    *   link do repositório
+    *   link do deploy
+    *   `README.md` com:
+        *   como correr localmente
+        *   como correr testes
+        *   breve lista de decisões técnicas (3–6 bullets)
+
+***
+
+## 7) Bónus (se sobrar tempo — opcional)
+
+Escolhe **apenas 1**:
+
+*   Pesquisa recente (persistida em localStorage)
+*   Skeleton loading no detalhe
+*   “Favoritar” itens dentro da coleção
+*   Pequeno modo escuro (toggle)
+
+***
+
+## 8) Entregáveis
+
+1.  Repositório Git
+2.  Link do deploy
+3.  README completo (instruções + decisões técnicas)
